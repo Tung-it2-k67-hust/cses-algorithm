@@ -13,7 +13,7 @@ build(data, 1, 0, n - 1);}
 void update(int index,int val){
     update(1,0,n-1,index,val); 
 }
-int query(int l,int r){
+ll query(int l,int r){
   return query(1,0,n-1,l,r);
 }
 
@@ -39,7 +39,7 @@ void update(int id, int start,int end,int index,int val){
     
   }
   else{
-    update(id*2+1,start,mid,index,val);
+    update(id*2+1,mid+1,end,index,val);
   }
   tree[id] = tree[id*2]+tree[id*2+1];
 }}
