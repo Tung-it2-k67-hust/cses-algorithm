@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+#define maxn 200000
+#define ll long long
+using namespace std;
+
+class Segment{
+public:
+    Segment(const vector<ll>& data){
+  n = data.size();
+tree.resize(2*n);//build a segtree
+build(data, 1, 0, n - 1);}
+
+void update(int index,int val){
+    update(1,0,n-1,index,val); 
+}
+int query(int l,int r){
+  return query(1,0,n-1,l,r);
+}
+
+private:
+   vector<ll> tree;
+int n;
+void build(const vector<ll>& data,int id,int start,int end){
+if(start==end) tree[id] = data[start];//recursively gan nhan
+else{
+  int mid = (start+end)/2;
+  build(data,2*id,start,mid);
+  build(data,2*id+1,mid+1,end);
+  tree[id] = tree[id*2]+tree[id*2+1];//tinh tong
+  
+}}
+void update(int id, int start,int end,int index,int val){
+  if(start==end) tree[id] = val;
+  else{
+  int mid = (start+end)/2;
+  if(start<=index&&index<=mid)//neu nam trong khoang dang quan ly
+  {
+    update(id*2,start,mid,index,val);
+    
+  }
+  else{
+    update(id*2+1,start,mid,index,val);
+  }
+  tree[id] = tree[id*2]+tree[id*2+1];
+}}
+
+ll query(int id,int start,int end,int left,int right){
+  if (right < start || end < left) {
+            return 0;
+        }
+  if(left<= start&&end<=right){
+    return tree[id];//query tu dau xuong, neu nam trong khoang thi la dung roi 
+    
+  }
+  int mid = (start+end)/2;
+  ll q1=query(id*2,start,mid,left,right);
+  ll q2 = query(id*2+1,mid+1,end,left,right);
+  return q1+q2;
+  
+  
+}
+
+};
+
+int main() 
+{
+    ll n,q;
+    cin>>n>>q;
+    vector<ll>arr(n);
+    for(ll i  =0;i<n;i++) cin>>arr[i];
+    Segment Segment(arr);
+    for (int i = 0; i < q; ++i) {
+        int type, a, b;
+        cin >> type >> a >> b;
+        if (type == 1) {
+            // Update operation
+            Segment.update(a - 1, b); // a is 1-based, convert to 0-based
+        } else if (type == 2) {
+            // Query operation
+            cout << Segment.query(a - 1, b - 1) << endl; // convert to 0-based
+        }
+    }
+}
